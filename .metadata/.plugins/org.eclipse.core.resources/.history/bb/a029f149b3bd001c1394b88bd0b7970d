@@ -1,0 +1,7 @@
+#SERVER CONFIG 
+server.port=7003
+spring.application.name=product-service
+
+# eureka config 
+eureka.client.serviceUrl.defaultZone = http://localhost:7001/eureka
+eureka.instance.hostname=localhost

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aop-reference-model>
+<aop-project name="apigateway-service"/>
+<aop-project name="eureka-registry-service"/>
+<aop-project name="products-service"/>
+</aop-reference-model>
