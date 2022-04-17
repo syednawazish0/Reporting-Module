@@ -48,12 +48,9 @@ public class ProductController {
 	}
 
 	@PostMapping("/products")
-
 	public Product addProduct(@RequestBody Product product) {
 		return proRepository.save(product);
 	}
-	
-	
 
 	@PutMapping("/products")
 	public Product updateProduct(@RequestBody Product product) {
