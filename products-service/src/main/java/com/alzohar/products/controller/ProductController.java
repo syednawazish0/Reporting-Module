@@ -1,7 +1,13 @@
 package com.alzohar.products.controller;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,13 +22,18 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alzohar.products.entity.Product;
 import com.alzohar.products.exception.ProductListIsEmpty;
 import com.alzohar.products.exception.ProductNotFound;
+import com.alzohar.products.exporter.ProductExcelExporter;
 import com.alzohar.products.repository.ProductRepository;
+import com.alzohar.products.service.ProductService;
 
 @RestController
 public class ProductController {
 
 	@Autowired
 	ProductRepository proRepository;
+
+	@Autowired
+	ProductService proService;
 
 	@GetMapping("/product/{id}")
 	public Optional<Product> getOneProduct(@PathVariable(value = "id") long id) {
@@ -47,6 +58,21 @@ public class ProductController {
 		return products;
 	}
 
+	@GetMapping("/products/exp/excel")
+	public void exportToExcel(HttpServletResponse response) throws IOException {
+		response.setContentType("application/octet-stream");
+		DateFormat dateFormatter = new SimpleDateFormat("dd-mm-yyyy_HH:mm:ss");
+		String currentDateTime = dateFormatter.format(new Date());
+
+		String headerKey = "Content-Disposition";
+		String headerValue = "attachment; filename=products_" + currentDateTime + ".xlsx";
+		response.setHeader(headerKey, headerValue);
+
+		List<Product> listProduct = proService.listAll();
+		ProductExcelExporter excelExporter = new ProductExcelExporter(listProduct);
+		excelExporter.export(response);
+	}
+
 	@PostMapping("/products")
 	public Product addProduct(@RequestBody Product product) {
 		return proRepository.save(product);
@@ -54,7 +80,7 @@ public class ProductController {
 
 	@PutMapping("/products")
 	public Product updateProduct(@RequestBody Product product) {
-			return proRepository.save(product);
+		return proRepository.save(product);
 	}
 
 	@DeleteMapping("/products/{id}")

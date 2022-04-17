@@ -1,0 +1,21 @@
+package com.alzohar.products.exporter;
+
+import java.util.List;
+
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import com.alzohar.products.entity.Product;
+
+public class ProductExcelExporter {
+
+	private XSSFWorkbook workbook;
+    private XSSFSheet sheet;
+    private List<Product> listProducts;
+    
+    public ProductExcelExporter(List<Product> listProduct) {
+    	this.listProducts = listProduct;
+    	workbook = new XSSFWorkbook();
+    }
+    
+}
