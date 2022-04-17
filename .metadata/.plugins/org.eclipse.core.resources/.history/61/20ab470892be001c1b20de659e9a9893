@@ -19,6 +19,6 @@ public class ProductService {
 	ProductRepository repo;
 
 	public List<Product> listAll() {
-		return repo.findAll();
+		return repo.findAll(Sort.by("name").ascending());
 	}
 }
