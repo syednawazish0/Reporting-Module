@@ -1,0 +1,10 @@
+package com.alzohar.products.exception;
+
+public class ProductNotFound extends RuntimeException {
+
+	private static final long serialVersionUID = 1L;
+
+	ProductNotFound(String message) {
+		super(message);
+	}
+}

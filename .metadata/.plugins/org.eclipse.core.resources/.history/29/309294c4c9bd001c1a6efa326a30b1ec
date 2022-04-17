@@ -1,0 +1,26 @@
+package com.alzohar.products.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.alzohar.products.entity.Product;
+import com.alzohar.products.repository.ProductRepository;
+
+@RestController
+public class ProductController {
+
+	@Autowired
+	ProductRepository proRepository;
+	
+	@GetMapping("/products")
+	List<Product> getProducts(){
+		List<Product> products = proRepository.findAll();
+		if(products != null) {
+			return products;
+		}
+		
+	}
+}

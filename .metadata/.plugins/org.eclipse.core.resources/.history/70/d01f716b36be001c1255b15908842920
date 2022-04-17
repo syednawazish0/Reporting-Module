@@ -1,0 +1,48 @@
+package com.alzohar.products.entity;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+@Table(name = "product_service")
+@Entity
+public class Product {
+
+	@Id
+	@Column(name = "product_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+
+	@Column(name = "name")
+	private String name;
+
+	@Column(name = "price")
+	private double price;
+
+	@Column(name = "brand")
+	private String brand;
+
+	@Column(name = "description")
+	private String desc;
+
+	@Column(name = "enabled")
+	private String enabled;
+
+	@DateTimeFormat
+	@Column(name = "created_At")
+	private Date createdAt;
+
+}
