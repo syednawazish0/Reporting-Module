@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.supercsv.io.CsvBeanWriter;
+import org.supercsv.io.ICsvBeanReader;
+import org.supercsv.io.ICsvBeanWriter;
+import org.supercsv.prefs.CsvPreference;
 
 import com.alzohar.products.entity.Product;
 import com.alzohar.products.exception.ProductListIsEmpty;
@@ -58,6 +62,7 @@ public class ProductController {
 		return products;
 	}
 
+//	getmapping for excel file download
 	@GetMapping("/products/exp/excel")
 	public void exportToExcel(HttpServletResponse response) throws IOException {
 		response.setContentType("application/octet-stream");
@@ -71,6 +76,33 @@ public class ProductController {
 		List<Product> listProduct = proService.listAll();
 		ProductExcelExporter excelExporter = new ProductExcelExporter(listProduct);
 		excelExporter.export(response);
+	}
+
+//	getmapping for csv file download
+	@GetMapping("products/exp/csv")
+	public void exportToCSV(HttpServletResponse response) throws IOException {
+		response.setContentType("text/csv");
+		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+		String currentDateTime = dateFormatter.format(new Date());
+
+		String headerKey = "Content-Disposition";
+		String headerValue = "attachment; filename=products_" + currentDateTime + ".csv";
+		response.setHeader(headerKey, headerValue);
+
+		List<Product> listProduct = proService.listAll();
+
+		ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
+		String[] csvHeader = { "Product_Id", "Product_Name", "Product_Price", "Product_Brand", "Product_Description",
+				"Product_Enabled", "Product_Created_At" };
+		String[] nameMapping = { "id", "name", "price", "brand", "desc", "enabled", "createdAt" };
+
+		csvWriter.writeHeader(csvHeader);
+
+		for (Product product : listProduct) {
+			csvWriter.write(product, nameMapping);
+		}
+
+		csvWriter.close();
 	}
 
 	@PostMapping("/products")
