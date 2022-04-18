@@ -27,12 +27,17 @@ import com.alzohar.products.entity.Product;
 import com.alzohar.products.exception.ProductListIsEmpty;
 import com.alzohar.products.exception.ProductNotFound;
 import com.alzohar.products.exporter.ProductExcelExporter;
+import com.alzohar.products.exporter.ProductPDFExporter;
 import com.alzohar.products.repository.ProductRepository;
 import com.alzohar.products.service.ProductService;
+import com.lowagie.text.DocumentException;
 
 @RestController
 public class ProductController {
-
+	
+	DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+	String currentDateTime = dateFormatter.format(new Date());
+	
 	@Autowired
 	ProductRepository proRepository;
 
@@ -70,7 +75,7 @@ public class ProductController {
 		String currentDateTime = dateFormatter.format(new Date());
 
 		String headerKey = "Content-Disposition";
-		String headerValue = "attachment; filename=products_" + currentDateTime + ".xlsx";
+		String headerValue = "attachment; filename=products_" + currentDateTime + ".xls";
 		response.setHeader(headerKey, headerValue);
 
 		List<Product> listProduct = proService.listAll();
@@ -105,6 +110,24 @@ public class ProductController {
 		csvWriter.close();
 	}
 
+//	getmapping for pdf file download
+
+	@GetMapping("/products/exp/pdf")
+	public void exportToPDF(HttpServletResponse response) throws DocumentException, IOException {
+		response.setContentType("application/pdf");
+		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+		String currentDateTime = dateFormatter.format(new Date());
+
+		String headerKey = "Content-Disposition";
+		String headerValue = "attachment; filename=products" + currentDateTime + ".pdf";
+		response.setHeader(headerKey, headerValue);
+
+		List<Product> listProduct = proService.listAll();
+
+		ProductPDFExporter exporter = new ProductPDFExporter(listProduct);
+		exporter.export(response);
+	}
+
 	@PostMapping("/products")
 	public Product addProduct(@RequestBody Product product) {
 		return proRepository.save(product);
@@ -120,4 +143,5 @@ public class ProductController {
 		proRepository.deleteById(id);
 		return "Product Is Delete Successfully.";
 	}
+
 }

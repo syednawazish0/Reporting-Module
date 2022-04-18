@@ -1,0 +1,61 @@
+package com.alzohar.products.exporter;
+
+import java.awt.Color;
+import java.util.List;
+
+import com.alzohar.products.entity.Product;
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.*;
+
+public class ProductPDFExporter {
+
+	private List<Product> listProducts;
+
+	public ProductPDFExporter(List<Product> listProducts) {
+		super();
+		this.listProducts = listProducts;
+	}
+
+	private void writeTableHeader(PdfPTable table) {
+		PdfPCell cell = new PdfPCell();
+		cell.setBackgroundColor(Color.BLUE);
+		cell.setPadding(5);
+
+		Font font = FontFactory.getFont(FontFactory.HELVETICA);
+		font.setColor(Color.WHITE);
+
+		cell.setPhrase(new Phrase("Product_Id", font));
+		table.addCell(cell);
+
+		cell.setPhrase(new Phrase("Product_Name", font));
+		table.addCell(cell);
+
+		cell.setPhrase(new Phrase("Product_Price", font));
+		table.addCell(cell);
+
+		cell.setPhrase(new Phrase("Product_Brand", font));
+		table.addCell(cell);
+
+		cell.setPhrase(new Phrase("Product_Description", font));
+		table.addCell(cell);
+
+		cell.setPhrase(new Phrase("Product_Enabled", font));
+		table.addCell(cell);
+
+		cell.setPhrase(new Phrase("Product_CreatedAt", font));
+		table.addCell(cell);
+	}
+
+	private void writeTableData(PdfPTable table) {
+		for (Product product : listProducts) {
+			table.addCell(String.valueOf(product.getId()));
+			table.addCell(product.getName());
+			table.addCell(String.valueOf(product.getPrice()));
+			;
+			table.addCell(product.getBrand());
+			table.addCell(product.getDesc());
+			table.addCell(product.getEnabled());
+			table.addCell(String.valueOf(product.getCreatedAt()));
+		}
+	}
+}

@@ -77,6 +77,7 @@ public class ProductExcelExporter {
 			createCell(row, columnCount++, prod.getEnabled(), style);
 			createCell(row, columnCount++, prod.getCreatedAt(), style);
 		}
+		
 	}
 
 	public void export(HttpServletResponse response) throws IOException {
