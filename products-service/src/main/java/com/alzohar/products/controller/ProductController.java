@@ -6,7 +6,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +39,17 @@ import com.lowagie.text.DocumentException;
 
 @RestController
 public class ProductController {
-	
-	DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-	String currentDateTime = dateFormatter.format(new Date());
-	
+
 	@Autowired
 	ProductRepository proRepository;
+
+//	@PostConstruct
+//	public void initDB() {
+//		List<Product> products = IntStream.rangeClosed(1, 500)
+//				.mapToObj(i -> new Product("product" + i, new Random().nextInt(100), new Random().nextInt(50000)))
+//				.collect(Collectors.toList());
+//		proRepository.saveAll(products);
+//	}
 
 	@Autowired
 	ProductService proService;
@@ -70,12 +80,12 @@ public class ProductController {
 //	getmapping for excel file download
 	@GetMapping("/products/exp/excel")
 	public void exportToExcel(HttpServletResponse response) throws IOException {
-		response.setContentType("application/octet-stream");
+		response.setContentType("application/vnd.ms-excel");
 		DateFormat dateFormatter = new SimpleDateFormat("dd-mm-yyyy_HH:mm:ss");
 		String currentDateTime = dateFormatter.format(new Date());
 
 		String headerKey = "Content-Disposition";
-		String headerValue = "attachment; filename=products_" + currentDateTime + ".xls";
+		String headerValue = "attachment; filename=products.xlsx";
 		response.setHeader(headerKey, headerValue);
 
 		List<Product> listProduct = proService.listAll();
@@ -117,10 +127,12 @@ public class ProductController {
 		response.setContentType("application/pdf");
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 		String currentDateTime = dateFormatter.format(new Date());
+		
+		Date date = new Date();
 
-		String headerKey = "Content-Disposition";
-		String headerValue = "attachment; filename=products" + currentDateTime + ".pdf";
-		response.setHeader(headerKey, headerValue);
+//		String headerKey = ("Content-Disposition");
+//		String headerValue = "inline; filename=products" + currentDateTime + ".pdf";
+		response.setHeader("Content-Disposition" , "attachment ;filename=products_" +date+".pdf");
 
 		List<Product> listProduct = proService.listAll();
 

@@ -22,6 +22,9 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Product {
 
+	public Product(String string, int nextInt, int nextInt2) {
+	}
+
 	@Id
 	@Column(name = "product_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
